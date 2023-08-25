@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+<title>Multi-Page Survey Form</title>
+</head>
+<body>
+<div id="page1" class="survey-page">
+  <h2>Page 1: Email</h2>
+  <label for="email">Email Address:</label>
+  <input type="email" id="email" required>
+  <button onclick="saveAndNavigate(2)">Next</button>
+</div>
+
+<div id="page2" class="survey-page" style="display:none;">
+  <h2>Page 2: Name, State, Country</h2>
+  <label for="name">Name:</label>
+  <input type="text" id="name" required><br>
+
+  <label for="state">State:</label>
+  <input type="text" id="state"><br>
+
+  <label for="country">Country:</label>
+  <input type="text" id="country"><br>
+
+  <label for="ph">phone no:</label>
+  <input type="text" id="ph"><br>
+
+  <button onclick="saveAndNavigate(3)">Next</button>
+</div>
+
+<div id="page3" class="survey-page" style="display:none;">
+  <h2>Page 3: Questions</h2>
+  <label for="question1">How are you:</label>
+  <input type="text" id="question1"><br>
+
+  <label for="question2">How was your overall experence:</label>
+  <input type="text" id="question2"><br>
+
+  <label for="question3">any suggestions:</label>
+  <input type="text" id="question3"><br>
+
+  <button onclick="submitForm()">Submit</button>
+</div>
+
+<script>
+
+  
+  function saveAndNavigate(pageNumber) {
+    const currentPage = document.getElementById(`page${pageNumber - 1}`);
+    const nextPage = document.getElementById(`page${pageNumber}`);
+    
+    
+
+    
+    // Save input values to localStorage/sessionStorage
+    if (pageNumber === 2) {
+
+      const emailInput = document.getElementById('email');
+      if (emailInput.value.trim() === '') {
+        alert('Email Address cannot be empty');
+        return; // Don't proceed to the next page
+      }
+      localStorage.setItem('email', document.getElementById('email').value);
+
+
+    } else if (pageNumber === 3) {
+     const nameInput = document.getElementById('name');
+     const stateInput = document.getElementById('state');
+     const countryInput = document.getElementById('country');
+     const phInput = document.getElementById('ph');
+     if (nameInput.value.trim()  === '') {
+        alert('Name cannot be empty');
+        return; // Don't proceed to the next page
+      }
+
+
+      if (stateInput.value.trim()  === '') {
+        alert('state cannot be empty');
+        return; // Don't proceed to the next page
+      }
+
+      if (countryInput.value.trim()  === '') {
+        alert('country cannot be empty');
+        return; // Don't proceed to the next page
+      }
+
+      if (phInput.value.trim()  === '') {
+        alert('phone number cannot be empty');
+        return; // Don't proceed to the next page
+      }
+
+
+      localStorage.setItem('name', document.getElementById('name').value);
+      localStorage.setItem('state', document.getElementById('state').value);
+      localStorage.setItem('country', document.getElementById('country').value);
+      localStorage.setItem('ph', document.getElementById('ph').value);
+    }
+
+    currentPage.style.display = 'none';
+    nextPage.style.display = 'block';
+  }
+const inputFields = document.querySelectorAll('input');
+  inputFields.forEach(input => {
+    input.addEventListener('keydown', function(event) {
+      if (event.keyCode === 13) {
+        event.preventDefault(); // Prevent default Enter behavior (form submission)
+        const currentPageNumber = parseInt(this.parentElement.id.replace('page', ''));
+        const nextPageNumber = currentPageNumber + 1;
+        saveAndNavigate(nextPageNumber);
+      }
+    });
+  });
+  function submitForm() {
+    const email = localStorage.getItem('email');
+    const name = localStorage.getItem('name');
+    const state = localStorage.getItem('state');
+    const country = localStorage.getItem('country');
+    const ph = localStorage.getItem('ph');
+    const question1 = document.getElementById('question1').value;
+    const question2 = document.getElementById('question2').value;
+    const question3 = document.getElementById('question3').value;
+
+   
+
+    var body = "email : " + email + "\n" + "name "+name + "\n" + "phone no " + ph 
+      + "state "+state + "\n" + "country " + country + "\n"+ "How are you:" + question1 + "\n"
+      + "How was your overall experence:" + question2+"\n"+"any suggestion:"+question3;
+
+    const subject = "test subject";
+
+
+    var mailtoLink = "mailto:your-email@example.com" +
+                "?subject=" + encodeURIComponent(subject) +
+                "&body=" + encodeURIComponent(body);
+
+            window.open(mailtoLink);
+  }
+</script>
+</body>
+</html>
